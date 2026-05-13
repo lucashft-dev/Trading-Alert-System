@@ -42,10 +42,18 @@ def console_log(price, support_area, rsi, score):
         print("NO TRADE")
     print("=" * 40)
 
+def get_signal(score):
+    if score >= 4:
+        return "STRONG"
+    elif score >= 2:
+        return "WATCH"
+    else:
+        return "NONE"
+
 
 def run():
-    exchange = ccxt.binance()
-    ohlcv = exchange.fetch_ohlcv("BTC/USDC", timeframe="1m", limit=200)
+    exchange = ccxt.coinbase()
+    ohlcv = exchange.fetch_ohlcv("HYPE/USDC", timeframe="1m", limit=200)
 
     df = pd.DataFrame(
         ohlcv,
@@ -73,19 +81,28 @@ def run():
     ema50 = df["ema50"].iloc[-1]
 
 
-    support_area = (80832.78, 80970.30)
+    support_area = (40.04, 39.97)
     # resistance_area = (X, X)
     in_zone = support_area[0] <= price <= support_area[1]
     # in_zone = resistance_area[0] <= price <= resistance_area[1]
 
     score = calcul_score(in_zone, rsi, ema50, ema200)
 
-    console_log(price, support_area, rsi, score)
+    console_log(price, support_area, rsi, score) # Si ici, affihage console a chaque nouvelle boucle (voir main())
+
+    signal = get_signal(score)
+    return signal, price, support_area, rsi, score
+
 
 def main():
+    last_signal = None
     while True:
         try:
-            run()
+            signal, price, support_area, rsi, score = run()
+            if signal != last_signal:
+                # console_log(price, support_area, rsi, score) # Affichage console que si nouveau signal pour pas spam la console
+                print(f"SIGNAL : {signal}")
+                last_signal = signal
         except Exception as e:
             print("ERROR : ", e)
 
