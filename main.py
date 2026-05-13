@@ -2,7 +2,7 @@ import ccxt
 import pandas as pd
 import talib
 import time
-
+from datetime import datetime
 
 
 # A améliorer plus tard avec d'autres indicateurs en fonction de la stratégie
@@ -23,6 +23,24 @@ def calcul_score(in_zone, rsi, ema50, ema200):
         score += 1
 
     return score
+
+def console_log(price, support_area, rsi, score):
+    now = datetime.now().strftime("%H:%M:%S")
+
+    print("=" * 40)
+    print(f"{now}")
+    print(f"Price: {price:.2f}")
+    print(f"Zone: {support_area}")
+    print(f"RSI: {rsi:.2f}")
+    print(f"Score: {score}")
+
+    if score >= 4:
+        print("PRICE IN ZONE AND RSI OVERSOLD, STRONG SIGNAL")
+    elif score >= 2:
+        print("PRICE IN ZONE, WAITING FOR RSI")
+    else:
+        print("NO TRADE")
+    print("=" * 40)
 
 
 def run():
@@ -62,18 +80,7 @@ def run():
 
     score = calcul_score(in_zone, rsi, ema50, ema200)
 
-
-    print(f"Price : {price}")
-    print(f"Key Level : {support_area}")
-    print(f"RSI : {rsi}")
-    print(f"Score : {score}")
-
-    if score >= 4:
-        print("PRICE IN ZONE AND RSI OVERSOLD, STRONG SIGNAL")
-    elif score >= 2:
-        print("PRICE IN ZONE, WAITING FOR RSI")
-    else:
-        print("NO TRADE")
+    console_log(price, support_area, rsi, score)
 
 def main():
     while True:
