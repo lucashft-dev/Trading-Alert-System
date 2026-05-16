@@ -3,6 +3,7 @@ from indicators.indicators import fetch_market_data, calculate_indicators
 from strategy.strategy import calculate_score, get_signal
 from utils.logger import console_log
 from config.config import SYMBOLE, TIMEFRAME, SETUP_TYPE, ENTRY_ZONE, LIQUIDITY_LEVEL
+from notif.telegram import send_telegram_message, format_telegram_message
 
 
 
@@ -18,8 +19,20 @@ def main():
             # if signal != last_signal:
             #     last_signal = signal
             #     console_log(price, ENTRY_ZONE, rsi, score, signal)
-            # Ici j'affiche toutes les 60 secondes car pratique pour debug
+            # Ici j'affiche toutes les 60 secondes car pratique pour debug (facultatif)
             console_log(price, ENTRY_ZONE, rsi, score, signal)
+            if signal != last_signal and signal != "NONE":
+                message = format_telegram_message(SYMBOLE=SYMBOLE,
+                                                  price=price,
+                                                  rsi=rsi,
+                                                  score=score, 
+                                                  entry_zone=ENTRY_ZONE,
+                                                  setup_type=SETUP_TYPE,
+                                                  timeframe=TIMEFRAME,
+                                                  liquidity_level=LIQUIDITY_LEVEL,
+                                                  ema50=ema50, 
+                                                  ema200=ema200)
+                send_telegram_message(message)
         except Exception as e:
             print("ERROR : ", e)
 
