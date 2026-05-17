@@ -2,6 +2,17 @@
 def calculate_score(price, setup_type, entry_zone, rsi, liquidity_level, bb_basse, bb_haute, ema50, ema200, last_open, last_close, last_low, last_high):
 
     in_entry_zone = entry_zone[0] <= price <= entry_zone[1]
+
+    bullish_rejection = (last_low < entry_zone[0] and last_close > entry_zone[0])
+    bearish_rejection = (last_high > entry_zone[1] and last_close < entry_zone[1])
+
+    body = abs(last_close - last_open)
+    lower_wick = min(last_open, last_close) - last_low
+    upper_wick = last_high - max(last_open, last_close)
+
+    bullish_hammer = (lower_wick > body * 2 and last_close > last_open)
+    bearish_hammer = (upper_wick > body * 2 and last_close < last_open)
+
     if not in_entry_zone:
          return 0
     else:
@@ -12,21 +23,24 @@ def calculate_score(price, setup_type, entry_zone, rsi, liquidity_level, bb_bass
                 score += 2
             if last_low < liquidity_level:
                 score += 2
-            bullish_rejection = (last_low < entry_zone[0] and last_close > entry_zone[0])
             if bullish_rejection:
+                score += 2
+            if bullish_hammer:
                 score += 2
             if ema50 > ema200:
                 score += 1
             if price < bb_basse:
                 score += 1
+            
 
         elif setup_type == "SHORT":
             if rsi > 70:
                 score += 2
             if last_high > liquidity_level:
                 score += 2
-            bearish_rejection = (last_high > entry_zone[1] and last_close < entry_zone[1])
             if bearish_rejection:
+                score += 2
+            if bearish_hammer:
                 score += 2
             if ema50 < ema200:
                 score += 1
