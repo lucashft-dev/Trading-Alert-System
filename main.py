@@ -1,9 +1,10 @@
 import time
 from indicators.indicators import fetch_market_data, calculate_indicators
 from strategy.strategy import calculate_score, get_signal
-from utils.logger import console_log
+from utils.console_logger import console_log
 from config.config import SYMBOLE, TIMEFRAME, SETUP_TYPE, ENTRY_ZONE, LIQUIDITY_LEVEL
 from notif.telegram import send_telegram_message, format_telegram_message
+from utils.csv_logger import log_signal
 
 
 
@@ -33,6 +34,11 @@ def main():
                                                   ema50=ema50, 
                                                   ema200=ema200)
                 send_telegram_message(message)
+
+            # Log seulement si on a un setup fort
+            # A moyen / long terme, on pourra analyser et améliorer
+            if score >= 6:
+                log_signal(symbol=SYMBOLE, timeframe=TIMEFRAME, setup_type=SETUP_TYPE, signal=signal, score=score, price=price, rsi=rsi)
         except Exception as e:
             print("ERROR : ", e)
 

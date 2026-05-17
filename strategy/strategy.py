@@ -35,9 +35,7 @@ def calculate_score(price, setup_type, entry_zone, rsi, liquidity_level, last_lo
 def get_signal(score):
         if score < 2:
             return "NONE"
-        elif score >= 4:
+        elif score >= 2 and score < 6:
             return "POTENTIAL SETUP"
         elif score >= 6:
             return "STRONG SETUP"
-        elif score == 2:
-            return "PERFECT SETUP"
