@@ -41,10 +41,10 @@ def format_telegram_message(SYMBOLE, price, rsi, score, entry_zone, setup_type, 
 ━━━━━━━━━━━━━━
 📈 Context :
 - Looking for a {setup_type} setup.
-- Market in Zone : {"YES" if zone_low <= price <= zone_high else "NO"}
-- RSI condition : {"OVERSOLD" if rsi < 30 else "OVERBOUGHT" if rsi > 70 else "NEUTRAL"}
-- Liquidity level : {"TAKEN" if (price <= liquidity_level and setup_type == "LONG") or (price >= liquidity_level and setup_type == "SHORT") else "NOT TAKEN"}
-- EMA50 vs EMA200 : {"BULLISH" if ema50 > ema200 else "BEARISH"}
+- Market in Zone : {"Yes" if zone_low <= price <= zone_high else "No"}
+- RSI condition : {"Oversold : {rsi:.2f}" if rsi < 30 else "Overbought : {rsi:.2f}" if rsi > 70 else "Neutral"}
+- Liquidity level : {"Taken" if (price <= liquidity_level and setup_type == "LONG") or (price >= liquidity_level and setup_type == "SHORT") else "Not taken yet"}
+- EMA50 vs EMA200 : {"Bullish trend" if ema50 > ema200 else "Bearish trend"}
 ━━━━━━━━━━━━━━
 
 📡 Crypto Trading Alert System Bot

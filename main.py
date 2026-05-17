@@ -15,8 +15,8 @@ def main():
     while True:
         try:
             df = fetch_market_data()
-            price, rsi, bb_haute, bb_basse, last_lows, last_highs, ema200, ema50 = calculate_indicators(df)
-            score = calculate_score(price, SETUP_TYPE, ENTRY_ZONE, rsi, LIQUIDITY_LEVEL, last_lows, last_highs, bb_basse, bb_haute, ema50, ema200)
+            price, rsi, bb_haute, bb_basse, last_low, last_high, last_close, ema200, ema50 = calculate_indicators(df)
+            score = calculate_score(price, SETUP_TYPE, ENTRY_ZONE, rsi, LIQUIDITY_LEVEL, last_low, last_high, last_close, bb_basse, bb_haute, ema50, ema200)
             signal = get_signal(score)
             # Pour afficher dans la console seulement si nouveau signal détecté :
             # if signal != last_signal:
@@ -24,7 +24,7 @@ def main():
             #     console_log(price, ENTRY_ZONE, rsi, score, signal)
             # Ici j'affiche toutes les 60 secondes car pratique pour debug (facultatif)
             console_log(price, ENTRY_ZONE, rsi, score, signal)
-            if signal != last_signal and signal != "NONE":
+            if signal == "STRONG SETUP":
                 message = format_telegram_message(SYMBOLE=SYMBOLE,
                                                   price=price,
                                                   rsi=rsi,
@@ -37,9 +37,9 @@ def main():
                                                   ema200=ema200)
                 send_telegram_message(message)
 
-            # Log seulement si on a un setup fort
+            # Log seulement si on a un setup fort (à modifier en fonction des préférences, ici 8)
             # A moyen / long terme, on pourra analyser et améliorer
-            if signal != last_logged_signal and score >= 6:
+            if signal != last_logged_signal and score >= 8:
                 log_signal(symbol=SYMBOLE, timeframe=TIMEFRAME, setup_type=SETUP_TYPE, signal=signal, score=score, price=price, rsi=rsi)
                 last_logged_signal = signal
         except Exception as e:

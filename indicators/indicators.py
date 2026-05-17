@@ -37,10 +37,12 @@ def calculate_indicators(df):
     bb_haute = df["bb_haute"].iloc[-1]
     bb_basse = df["bb_basse"].iloc[-1]
 
-    last_lows = df["low"].tail(10)
-    last_highs = df["high"].tail(10)
+    last_open = df["open"].iloc[-1]
+    last_close = df["close"].iloc[-1]
+    last_low = df["low"].iloc[-1]
+    last_high = df["high"].iloc[-1]
 
     ema200 = df["ema200"].iloc[-1]
     ema50 = df["ema50"].iloc[-1]
 
-    return price, rsi, bb_haute, bb_basse, last_lows, last_highs, ema200, ema50
+    return price, rsi, bb_haute, bb_basse, ema200, ema50, last_open, last_close, last_low, last_high
