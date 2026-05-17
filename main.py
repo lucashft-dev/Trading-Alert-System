@@ -5,11 +5,13 @@ from utils.console_logger import console_log
 from config.config import SYMBOLE, TIMEFRAME, SETUP_TYPE, ENTRY_ZONE, LIQUIDITY_LEVEL
 from notif.telegram import send_telegram_message, format_telegram_message
 from utils.csv_logger import log_signal
+from utils.time_sync import wait_for_next_candle
 
 
 
 def main():
     last_signal = None
+    last_logged_signal = None
     while True:
         try:
             df = fetch_market_data()
@@ -37,12 +39,13 @@ def main():
 
             # Log seulement si on a un setup fort
             # A moyen / long terme, on pourra analyser et améliorer
-            if score >= 6:
+            if signal != last_logged_signal and score >= 6:
                 log_signal(symbol=SYMBOLE, timeframe=TIMEFRAME, setup_type=SETUP_TYPE, signal=signal, score=score, price=price, rsi=rsi)
+                last_logged_signal = signal
         except Exception as e:
             print("ERROR : ", e)
 
-        time.sleep(60)
+        wait_for_next_candle(TIMEFRAME)
 
 
 

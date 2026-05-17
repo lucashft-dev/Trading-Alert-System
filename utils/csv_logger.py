@@ -16,7 +16,7 @@ def log_signal(symbol, timeframe, setup_type, signal, score, price, rsi):
             writer.writerow(["timestamp", "symbol", "timeframe", "setup_type", "signal", "score", "price", "rsi"])
 
         writer.writerow([
-            datetime.now(),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             symbol,
             timeframe,
             setup_type,
